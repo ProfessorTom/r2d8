@@ -25,7 +25,7 @@ const startBot = () => {
         // For tech256, the bot's name is "bot", but this code should otherwise be agnostic and shouldn't care about the string "bot"
         bot.getUserId( `${bot.name}` ).then( ( uid ) => {
             process.env.BOT_ID = uid;
-            logger.log( 'debug', `BOT_ID = ${uid}`);
+            logger.log( 'debug', `BOT_ID = ${uid}` );
         } );
     } );
 
@@ -75,6 +75,11 @@ const startBot = () => {
     } );
 };
 
+const getBot = () => {
+    // console.log( 'bot in getBot: ', bot );
+    return bot;
+};
+
 module.exports = {
-    startBot
+    startBot, getBot
 };

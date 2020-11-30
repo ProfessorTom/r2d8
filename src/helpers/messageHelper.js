@@ -1,5 +1,7 @@
 const constants = require( './constants.js' );
 const helpers = require( '../helpers/helpers' );
+const karma = require( '../karma' );
+const bot = require( '../bot' );
 const logger = require( '../logger' );
 
 const messageIsFromABot = function( event ) {
@@ -12,6 +14,7 @@ const messageIsFromABot = function( event ) {
 
 const getMessageResponse = function( event ) {
     const message = event.text;
+    console.log( 'immediate message: ' + message );
     let response = '';
 
     if( helpers.isEmpty( message ) || messageIsFromABot( event ) ) {
@@ -32,9 +35,45 @@ const getMessageResponse = function( event ) {
 
     const welcome = new RegExp( '^!welcome', 'i' );
 
+    const addKarma = new RegExp( '.+[++]' );
+    const subtractKarma = new RegExp( '.+[--]' );
+
+    if ( message.match( addKarma ) ) {
+        const channel = event.channel;
+        console.log( 'message in addKarma if: ' + message );
+        
+        // pull ++ off end of string
+        let noIncrementString = message.substring( 0, message.length - 2 );
+        console.log( 'noIncrementString: ' + noIncrementString );
+        // TODO: remove '', "", or ()
+        
+        karma.increment( noIncrementString ).then( ( response ) => {
+            console.log( 'got into then of karma.increment in getMessageResponse' );
+            bot.getBot().postMessage( channel, response, {
+                as_user: true,
+                link_names: true
+            } );
+        } );
+    }
+    
+    else if( message.match( subtractKarma ) ) {
+        const channel = event.channel;
+        
+        // pull -- off end of string
+        let noDecrementString = message.substring( 0, message.length - 2 );
+        // TODO: remove '', "", or ()
+        
+        karma.decrement( noDecrementString ).then( ( response ) => {
+            bot.getBot().postMessage( channel, response, {
+                as_user: true,
+                link_names: true
+            } );
+        } );
+
+    }
     // user example: where is R2D8?
     // user example: where's R2D8?
-    if ( message.match( whereIs ) != null || message.match( wheres ) != null
+    else if ( message.match( whereIs ) != null || message.match( wheres ) != null
         || message.match( whereIsUserId ) != null || message.match( wheresUserId ) != null ) {
         response = `There is no ${process.env.ROBOT_NAME}. There is only Zuul.`;
     }

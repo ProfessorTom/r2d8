@@ -1,7 +1,14 @@
 const messageHelper = require( '../messageHelper' );
 const constants = require( '../constants' );
 const helpers = require( '../helpers' );
+const karma = require( '../../karma' );
+const bot = require( '../../bot' );
+const SlackBot = require( 'slackbots' );
 const logger = require( '../../logger' );
+
+jest.mock( 'slackbots' );
+
+bot.startBot();
 
 describe( 'messageHelper', () => {
     describe( 'messageIsFromABot', () => {
@@ -131,6 +138,37 @@ describe( 'messageHelper', () => {
 
         afterEach( () => {
             process.env = OLD_ENV;
+        } );
+
+        describe( 'karma', () => {
+            describe( 'add', () => {
+                const incrementResponse = 'not the actual response';
+                let foo = 
+                beforeEach( () => {
+                    karma.increment = jest.fn().mockResolvedValue( incrementResponse );
+                    logger.log = jest.fn( 'logger mock' );
+
+                    // bot.startBot();
+
+                    // SlackBot.postMessage = jest.fn().mockName( 'slackbot postMessage mock' );
+                    // bot.postMessage = jest.fn().mockName( 'postmessage' );
+                } );
+                test( 'notEnclosed', () => {
+                    expect( logger.log ).toHaveBeenCalledTimes( 0 );
+                    
+                    event.text = 'testing++';
+                    
+                    messageHelper.getMessageResponse( event );
+                    expect( logger.log ).toHaveBeenCalledTimes( 0 );
+                    expect( karma.increment ).toHaveBeenCalledTimes( 1 );
+
+                    console.log( 'bot: ' + bot.getBot().postMessage );
+
+                    // expect( SlackBot.postMessage ).toHaveBeenCalledTimes( 9 );
+                    expect( bot.getBot().postMessage ).toHaveBeenCalledTimes( 3 );
+                    expect( bot.postMessage ).toHaveBeenNthCalledWith( 'foobar' );
+                } );
+            } );
         } );
 
         describe( 'where is', () => {

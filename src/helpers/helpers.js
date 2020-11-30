@@ -12,4 +12,4 @@ const isEmpty = function( obj ) {
 
 module.exports = {
     isEmpty
-}
+};
