@@ -61,7 +61,7 @@ describe( 'Karma', () => {
 
                     await karma.increment( 'foobarbaz' );
                     expect( logger.log ).toHaveBeenCalledTimes( 1 );
-                    expect( logger.log ).toHaveBeenCalledWith( incrementError );
+                    expect( logger.log ).toHaveBeenCalledWith( 'error', incrementError );
                 } );
             } );
         } );
@@ -95,7 +95,7 @@ describe( 'Karma', () => {
 
                     await karma.increment( 'any message' );
                     expect( logger.log ).toHaveBeenCalledTimes( 1 );
-                    expect( logger.log ).toHaveBeenCalledWith( addError );
+                    expect( logger.log ).toHaveBeenCalledWith( 'error', addError );
                 } );
             } );
         } );
@@ -154,7 +154,7 @@ describe( 'Karma', () => {
 
                     await karma.decrement( 'foobarbaz' );
                     expect( logger.log ).toHaveBeenCalledTimes( 1 );
-                    expect( logger.log ).toHaveBeenCalledWith( incrementError );
+                    expect( logger.log ).toHaveBeenCalledWith( 'error', incrementError );
                 } );
             } );
         } );
@@ -188,7 +188,7 @@ describe( 'Karma', () => {
 
                     await karma.decrement( 'any message' );
                     expect( logger.log ).toHaveBeenCalledTimes( 1 );
-                    expect( logger.log ).toHaveBeenCalledWith( addError );
+                    expect( logger.log ).toHaveBeenCalledWith( 'error', addError );
                 } );
             } );
         } );
