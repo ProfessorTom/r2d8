@@ -52,4 +52,29 @@ const getPhraseFromDatabase = async( message ) => {
     }
 };
 
-module.exports = {addPhrase, getPhraseFromDatabase, updatePhrase};
+const getPhrasesByTopKarma = async() => {
+    let phrases = [];
+    await dbHelpers.setupDB();
+    try {
+        await Phrase.findAll( {
+            limit: 5,
+            order: [['points', 'DESC']],
+        },
+        {
+            returning: true,
+            plain: true
+          
+            //TODO Cleanup
+        } ).then( async( result ) => {
+            for ( const phrase of result ) {
+                phrases.push( phrase.dataValues.message + ': ' + phrase.dataValues.points );
+            }
+            console.log( 'console log in getPhrasesByTop :', phrases );
+            return phrases;
+        } );
+    } catch ( error ) {
+        logger.log( 'error', error );
+    }
+};
+
+module.exports = {addPhrase, getPhraseFromDatabase, updatePhrase, getPhrasesByTopKarma};

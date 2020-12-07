@@ -60,4 +60,18 @@ const decrement = async( message ) => {
     }
 };
 
-module.exports = {increment, decrement};
+//TODO: Refactor TOP | Wrap in a Try Catch
+//query isEmpty?
+const getKarmaScoresByX = async() => {
+    const topFive = await karmaHelpers.getPhrasesByTopKarma();
+    if ( topFive !== undefined ) {
+        try {
+            console.log( topFive );
+            return topFive;
+        } catch ( err ) {
+            logger.log( 'error', err );
+        }
+    }
+};
+
+module.exports = {increment, decrement, getKarmaScoresByX};
